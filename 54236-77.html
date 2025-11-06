@@ -1,0 +1,1342 @@
+<!-- this Dashboard is made by Dr Mahmoud Hesham - eLearning & EdTech Innovator -->
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Department Project Management System">
+    <meta name="author" content="Dr Mahmoud Hesham">
+    <title>Task Management Interface</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1em;
+        }
+
+        .api-config {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .api-config input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 2px solid #ffc107;
+            border-radius: 5px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 1em;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .btn-warning:hover {
+            background: #e0a800;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .actions-bar {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .card h2 {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #555;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-buttons .btn {
+            padding: 8px 16px;
+            font-size: 0.9em;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+
+        .close {
+            font-size: 28px;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-actions {
+            margin-top: 25px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            animation: slideDown 0.3s;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border-left: 4px solid #17a2b8;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 1.2em;
+            color: #666;
+        }
+
+        .loading:after {
+            content: '...';
+            animation: dots 1.5s infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-not-started { background: #e3f2fd; color: #1976d2; }
+        .status-in-progress { background: #fff3e0; color: #f57c00; }
+        .status-completed { background: #e8f5e9; color: #388e3c; }
+        .status-on-hold { background: #fce4ec; color: #c2185b; }
+
+        .priority-badge {
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .priority-high { background: #ffebee; color: #c62828; }
+        .priority-medium { background: #fff3e0; color: #ef6c00; }
+        .priority-low { background: #e8f5e9; color: #2e7d32; }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .actions-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+        .btn.btn-info {
+            background: #17a2b8;
+            color: white;
+            margin: 5px;
+        }
+        .btn.btn-info:hover {
+            background: #138496;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 14px;
+            color: #ffffff;
+        }
+        .controls {
+            display: flex;
+            /* grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); */
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .control-group label {
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+            font-size: 0.9em;
+        }
+
+        .control-group input,
+        .control-group select {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.95em;
+            transition: all 0.3s;
+        }
+        .control-group input:focus,
+        .control-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1> Dr Alaa Fathy Task Manager 📝 </h1>
+            
+        </div>
+
+        <div id="alertContainer"></div>
+
+        <div class="actions-bar">
+            
+            
+            <button class="btn btn-primary" onclick="loadTasks()">
+                🔄 Refresh Tasks
+            </button>
+            <button class="btn btn-success" onclick="openAddModalP()">
+                Add New Task
+            </button>
+            <button class="btn btn-success" onclick="openAddModal()">
+                Add New Project
+            </button>
+            <span style="margin-left: auto; color: #666;" id="taskCount">0 tasks loaded</span>
+        </div>
+
+        <div class="card">
+            <h2>📋 All Tasks</h2>
+            <div class="controls">
+                <div class="control-group">
+                    <!-- <label for="projectFilter">Filter by Project:</label> -->
+                    <select id="projectFilter">
+                        <option value="">All Projects</option>
+                    </select>
+                    <select id="responsibleFilter">
+                        <option value="">All Responsible</option>
+                    </select>
+                </div>
+            </div>
+            <div class="table-container">
+                <table id="tasksTable">
+                    <thead>
+                        <tr>
+                            <th>Project</th>
+                            <th>Task Name</th>
+                            <th>Responsible</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Status</th>
+                            <th>Priority</th>
+                            <th>Progress</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tasksTableBody">
+                        <tr>
+                            <td colspan="9" class="loading">Click "Refresh Tasks" to begin</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Modal Project -->
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add New Project</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            
+            <form id="taskForm" onsubmit="return false;">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="projectName">Project Name *</label>
+                        <input type="text" id="projectNamep" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="taskName">Task Name *</label>
+                        <input type="text" id="taskNamep" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="responsible">Responsible Person *</label>
+                        <select id="responsiblep" required>
+                            
+                            
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="revisedBy">revisedBy *</label>
+                        <select id="revisedByp" required>
+                            
+                            
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="startDate">Start Date *</label>
+                        <input type="date" id="startDatep" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="endDate">End Date *</label>
+                        <input type="date" id="endDatep" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="deadline">Deadline</label>
+                        <input type="date" id="deadlinep">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="status">Status *</label>
+                        <select id="statusp" required>
+                            <option value="">Select Status</option>
+                            <option value="Not Started">Not Started</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                            <option value="On Hold">On Hold</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="priority">Priority *</label>
+                        <select id="priorityp" required>
+                            <option value="">Select Priority</option>
+                            <option value="High">High</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Low">Low</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="progress">Progress (%) *</label>
+                        <input type="number" id="progressp" min="0" max="100" value="0" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <input type="text" id="categoryp">
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="notes">Notes</label>
+                        <textarea id="notesp"></textarea>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="button" class="btn btn-success" onclick="saveProject()" id="saveBtn">
+                        💾 Save Project
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- edit or update tasks -->
+     <div id="taskModalp" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitlep">Add New Task</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            
+            <form id="taskFormp" onsubmit="return false;">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="projectName">Project Name *</label>
+                        <select id="projectName" required>
+                            
+                            
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="taskName">Task Name *</label>
+                        <input type="text" id="taskName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="responsible">Responsible Person *</label>
+                        <select id="responsible" required>
+                            
+                            
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="revisedBy">revisedBy *</label>
+                        <select id="revisedBy" required>
+                            
+                            
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="startDate">Start Date *</label>
+                        <input type="date" id="startDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="endDate">End Date *</label>
+                        <input type="date" id="endDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="deadline">Deadline</label>
+                        <input type="date" id="deadline">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="status">Status *</label>
+                        <select id="status" required>
+                            <option value="">Select Status</option>
+                            <option value="Not Started">Not Started</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                            <option value="On Hold">On Hold</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="priority">Priority *</label>
+                        <select id="priority" required>
+                            <option value="">Select Priority</option>
+                            <option value="High">High</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Low">Low</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="progress">Progress (%) *</label>
+                        <input type="number" id="progress" min="0" max="100" value="0" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <input type="text" id="category">
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="notes">Notes</label>
+                        <textarea id="notes"></textarea>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="button" class="btn btn-success" onclick="saveTask()" id="saveBtnp">
+                        💾 Save Task
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2>⚠️ Confirm Delete</h2>
+                <span class="close" onclick="closeDeleteModal()">&times;</span>
+            </div>
+            
+            <p style="margin-bottom: 25px; color: #666;">
+                Are you sure you want to delete this task? This action cannot be undone.
+            </p>
+            
+            <div id="deleteTaskInfo" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+            </div>
+            
+            <div class="form-actions">
+                <button class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+                <button class="btn btn-danger" onclick="confirmDelete()">
+                    🗑️ Delete Task
+                </button>
+            </div>
+        </div>
+    </div>
+    <footer>
+        Made with ❤️ by Dr Mahmoud - 2025 </a>
+    </footer>
+
+    <script>
+        let allTasks = [];
+        let filteredTasks = [];
+        let currentEditingRow = null;
+        let deleteTargetRow = null;
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+        function displayFilterInfo(){
+            const ProName = getQueryParam('ProName');
+            if (ProName) {
+                document.getElementById('projectFilter').value = ProName;
+                document.getElementById('projectFilter').dispatchEvent(new Event('change'));
+                
+            }
+        }
+        function displayPersonInfo(){
+            const Name = 'Dr Alaa Fathy';
+            if (Name) {
+                document.getElementById('responsibleFilter').value = Name;
+                document.getElementById('responsibleFilter').dispatchEvent(new Event('change'));
+                document.getElementById('responsibleFilter').disabled = true;
+                document.getElementById('responsibleFilter').style.display = 'none';
+            }
+        }
+        // Get the ProName passed from the previous page
+        const ProName = getQueryParam('ProName');
+        // console.log('Project Name from URL:', ProName);
+        async function loadTasks() {
+            const apiUrl = "https://script.google.com/macros/s/AKfycbyWWOtGExu8LhwWiVuLtq-mTL9dE3TW593D-fcTOXEWfY26hdfm8aI_CEhpYpfjyFSz/exec";
+            
+            if (!apiUrl) {
+                showAlert('⚠️ Please enter your Google Apps Script Web App URL first!', 'error');
+                return;
+            }
+
+            document.getElementById('tasksTableBody').innerHTML = '<tr><td colspan="9" class="loading">Loading tasks</td></tr>';
+
+            try {
+                const response = await fetch(apiUrl);
+                const result = await response.json();
+
+                if (result.success) {
+                    allTasks = result.data;
+                    renderTasksTable();
+                    populateFilters();
+                    displayPersonInfo();
+                    filteredTasks = getFilteredTasks();
+                    populateFilters();
+                    displayPersonInfo();
+                    document.getElementById('taskCount').textContent = `${filteredTasks.length} tasks loaded`;
+                    showAlert('✅ Tasks loaded successfully!', 'success');
+                    displayFilterInfo();
+                } else {
+                    throw new Error(result.error || 'Failed to load data');
+                }
+            } catch (error) {
+                document.getElementById('tasksTableBody').innerHTML = `
+                    <tr><td colspan="9" style="color: #dc3545; text-align: center; padding: 30px;">
+                        ❌ Error loading tasks: ${error.message}
+                    </td></tr>
+                `;
+                showAlert('❌ Error: ' + error.message, 'error');
+            }
+        }
+
+        function renderTasksTable() {
+            const tasks = getFilteredTasks();
+            const tbody = document.getElementById('tasksTableBody');
+
+            if (tasks.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 30px;">No tasks found. Click "Add New Task" to create one.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = tasks.map(task => `
+                <tr>
+                    <td><strong>${task['Project Name'] || '-'}</strong></td>
+                    <td>${task['Task Name'] || '-'}</td>
+                    <td>${task['Responsible'] || '-'}</td>
+                    <td>${formatDate(task['Start Date'])}</td>
+                    <td>${formatDate(task['End Date'])}</td>
+                    <td><span class="status-badge ${getStatusClass(task['Status'])}">${task['Status'] || '-'}</span></td>
+                    <td><span class="priority-badge ${getPriorityClass(task['Priority'])}">${task['Priority'] || '-'}</span></td>
+                    <td>${task['Progress (%)'] || 0}%</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-warning" onclick='editTask(${JSON.stringify(task).replace(/'/g, "&apos;")})'>
+                                ✏️ Edit
+                            </button>
+                            <button class="btn btn-danger" onclick='openDeleteModal(${JSON.stringify(task).replace(/'/g, "&apos;")})'>
+                                🗑️ Delete
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function openAddModal() {
+            currentEditingRow = null;
+            document.getElementById('modalTitle').textContent = 'Add New Project';
+            document.getElementById('taskForm').reset();
+            document.getElementById('saveBtn').innerHTML = '💾 Save Project';
+            document.getElementById('taskModal').classList.add('active');
+            const tasks = getFilteredTasks();
+            
+            // Populate form
+            
+            const responsibleSelect = document.getElementById('responsiblep');
+            const revisedBySelect = document.getElementById('revisedByp');
+
+            // Clear existing options
+            
+            responsibleSelect.innerHTML = '';
+            revisedBySelect.innerHTML = '';
+
+            const uniqueResponsibles = [...new Set(tasks.map(t => t['Responsible']).filter(Boolean))];
+            uniqueResponsibles.forEach(name => {
+                const option = new Option(name, name);
+                responsibleSelect.add(option);
+            });
+
+            const uniqueRevisedBys = [...new Set(tasks.map(t => t['Revised by']).filter(Boolean))];
+            uniqueRevisedBys.forEach(name => {
+                const option = new Option(name, name);
+                revisedBySelect.add(option);
+            });
+
+            
+
+        }
+
+        function editTask(task) {
+            currentEditingRow = task._rowId;
+            document.getElementById('modalTitle').textContent = 'Edit Task';
+            document.getElementById('saveBtn').innerHTML = '💾 Update Task';
+            // console.log('Editing task:', task['Responsible']);
+            
+            // Populate form
+            document.getElementById('projectNamep').value = task['Project Name'] || '';
+            document.getElementById('taskNamep').value = task['Task Name'] || '';
+            // document.getElementById('responsiblep').value = task['Responsible'] || '';
+            // document.getElementById('revisedByp').value = task['Revised by'] || '';
+            document.getElementById('startDatep').value = formatDateForInput(task['Start Date']);
+            document.getElementById('endDatep').value = formatDateForInput(task['End Date']);
+            document.getElementById('deadlinep').value = formatDateForInput(task['Deadline']);
+            document.getElementById('statusp').value = task['Status'] || '';
+            document.getElementById('priorityp').value = task['Priority'] || '';
+            document.getElementById('progressp').value = task['Progress (%)'] || 0;
+            document.getElementById('categoryp').value = task['Category'] || '';
+            document.getElementById('notesp').value = task['Notes'] || '';
+            const tasks = getFilteredTasks();
+            console.log('All tasks for populating selects:', tasks);
+            
+            // Populate form
+            
+            const responsibleSelect = document.getElementById('responsiblep');
+            const revisedBySelect = document.getElementById('revisedByp');
+
+            // Clear existing options
+            
+            responsibleSelect.innerHTML = '';
+            revisedBySelect.innerHTML = '';
+
+            const uniqueResponsibles = [...new Set(tasks.map(t => t['Responsible']).filter(Boolean))];
+            uniqueResponsibles.forEach(name => {
+                const option = new Option(name, name);
+                responsibleSelect.add(option);
+            });
+
+            const uniqueRevisedBys = [...new Set(tasks.map(t => t['Revised by']).filter(Boolean))];
+            uniqueRevisedBys.forEach(name => {
+                const option = new Option(name, name);
+                revisedBySelect.add(option);
+            });
+
+            
+            document.getElementById('taskModal').classList.add('active');
+        }
+
+        async function saveTask() {
+            const apiUrl = "https://script.google.com/macros/s/AKfycbyWWOtGExu8LhwWiVuLtq-mTL9dE3TW593D-fcTOXEWfY26hdfm8aI_CEhpYpfjyFSz/exec";
+            
+            if (!apiUrl) {
+                showAlert('⚠️ Please configure API URL first!', 'error');
+                return;
+            }
+
+            // Get form data
+            const taskData = {
+                'Project Name': document.getElementById('projectName').value,
+                'Task Name': document.getElementById('taskName').value,
+                'Responsible': document.getElementById('responsible').value,
+                'Revised by': document.getElementById('revisedBy').value,
+                'Start Date': document.getElementById('startDate').value,
+                'End Date': document.getElementById('endDate').value,
+                'Deadline': document.getElementById('deadline').value,
+                'Status': document.getElementById('status').value,
+                'Priority': document.getElementById('priority').value,
+                'Progress (%)': document.getElementById('progress').value,
+                'Category': document.getElementById('category').value,
+                'Notes': document.getElementById('notes').value
+            };
+
+            const action = currentEditingRow ? 'update' : 'add';
+            const payload = action === 'update' 
+                ? { action, rowId: currentEditingRow, updates: taskData }
+                : { action, task: taskData };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showAlert(`✅ ${action === 'add' ? 'Task added' : 'Task updated'} successfully!`, 'success');
+                    closeModal();
+                    loadTasks();
+                } else {
+                    throw new Error(result.message || 'Operation failed');
+                }
+            } catch (error) {
+                showAlert('❌ Error: ' + error.message, 'error');
+            }
+        }
+        async function saveProject() {
+            const apiUrl = "https://script.google.com/macros/s/AKfycbyWWOtGExu8LhwWiVuLtq-mTL9dE3TW593D-fcTOXEWfY26hdfm8aI_CEhpYpfjyFSz/exec";
+            
+            if (!apiUrl) {
+                showAlert('⚠️ Please configure API URL first!', 'error');
+                return;
+            }
+
+            // Get form data
+            const taskData = {
+                'Project Name': document.getElementById('projectNamep').value,
+                'Task Name': document.getElementById('taskNamep').value,
+                'Responsible': document.getElementById('responsiblep').value,
+                'Revised by': document.getElementById('revisedByp').value,
+                'Start Date': document.getElementById('startDatep').value,
+                'End Date': document.getElementById('endDatep').value,
+                'Deadline': document.getElementById('deadlinep').value,
+                'Status': document.getElementById('statusp').value,
+                'Priority': document.getElementById('priorityp').value,
+                'Progress (%)': document.getElementById('progressp').value,
+                'Category': document.getElementById('categoryp').value,
+                'Notes': document.getElementById('notesp').value
+            };
+
+            const action = currentEditingRow ? 'update' : 'add';
+            const payload = action === 'update' 
+                ? { action, rowId: currentEditingRow, updates: taskData }
+                : { action, task: taskData };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showAlert(`✅ ${action === 'add' ? 'Project added' : 'Project updated'} successfully!`, 'success');
+                    closeModal();
+                    loadTasks();
+                } else {
+                    throw new Error(result.message || 'Operation failed');
+                }
+            } catch (error) {
+                showAlert('❌ Error: ' + error.message, 'error');
+            }
+        }
+
+        function openDeleteModal(task) {
+            deleteTargetRow = task._rowId;
+            console.log(deleteTargetRow);
+            console.log("Task object:", task);
+            
+            document.getElementById('deleteTaskInfo').innerHTML = `
+                <strong>Task:</strong> ${task['Task Name']}<br>
+                <strong>Project:</strong> ${task['Project Name']}<br>
+                <strong>Responsible:</strong> ${task['Responsible']}
+            `;
+            
+            document.getElementById('deleteModal').classList.add('active');
+        }
+
+        async function confirmDelete() {
+            const apiUrl = "https://script.google.com/macros/s/AKfycbyWWOtGExu8LhwWiVuLtq-mTL9dE3TW593D-fcTOXEWfY26hdfm8aI_CEhpYpfjyFSz/exec";
+            
+            if (!apiUrl) {
+                showAlert('⚠️ Please configure API URL first!', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'delete',
+                        rowId: deleteTargetRow
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showAlert('✅ Task deleted successfully!', 'success');
+                    closeDeleteModal();
+                    loadTasks();
+                } else {
+                    throw new Error(result.message || 'Delete failed');
+                }
+            } catch (error) {
+                showAlert('❌ Error: ' + error.message, 'error');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('taskModal').classList.remove('active');
+            document.getElementById('taskForm').reset();
+            document.getElementById('taskModalp').classList.remove('active');
+            document.getElementById('taskFormp').reset();
+            currentEditingRow = null;
+        }
+        
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('active');
+            // document.getElementById('deleteModalp').classList.remove('active');
+            deleteTargetRow = null;
+        }
+
+        function showAlert(message, type) {
+            const container = document.getElementById('alertContainer');
+            const alertClass = type === 'success' ? 'alert-success' : type === 'error' ? 'alert-error' : 'alert-info';
+            
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert ${alertClass} show`;
+            alertDiv.textContent = message;
+            
+            container.innerHTML = '';
+            container.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                alertDiv.classList.remove('show');
+                setTimeout(() => alertDiv.remove(), 300);
+            }, 5000);
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            const date = new Date(dateStr);
+            if (isNaN(date.getTime())) return '-';
+            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+        }
+
+        function formatDateForInput(dateStr) {
+            if (!dateStr) return '';
+            const date = new Date(dateStr);
+            if (isNaN(date.getTime())) return '';
+            return date.toISOString().split('T')[0];
+        }
+
+        function getStatusClass(status) {
+            const statusMap = {
+                'Not Started': 'status-not-started',
+                'In Progress': 'status-in-progress',
+                'Completed': 'status-completed',
+                'On Hold': 'status-on-hold'
+            };
+            return statusMap[status] || 'status-not-started';
+        }
+
+        function getPriorityClass(priority) {
+            const priorityMap = {
+                'High': 'priority-high',
+                'Medium': 'priority-medium',
+                'Low': 'priority-low'
+            };
+            return priorityMap[priority] || 'priority-low';
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const taskModal = document.getElementById('taskModal');
+            const deleteModal = document.getElementById('deleteModal');
+            
+            if (event.target === taskModal) {
+                closeModal();
+            }
+            if (event.target === deleteModal) {
+                closeDeleteModal();
+            }
+        }
+        function populateFilters() {
+            
+            const projects = [...new Set(filteredTasks.map(t => t['Project Name']))].filter(Boolean);
+            const responsible = [...new Set(allTasks.map(t => t['Responsible']))].filter(Boolean);
+            const revisedBy = [...new Set(allTasks.map(t => t['Revised by']))].filter(Boolean);
+            const statuses = [...new Set(allTasks.map(t => t['Status']))].filter(Boolean);
+            const priorities = [...new Set(allTasks.map(t => t['Priority']))].filter(Boolean);
+
+            const projectFilter = document.getElementById('projectFilter');
+            projectFilter.innerHTML = '<option value="">All Projects</option>' + 
+                projects.map(p => `<option value="${p}">${p}</option>`).join('');
+
+            const responsibleFilter = document.getElementById('responsibleFilter');
+            responsibleFilter.innerHTML = '<option value="">All Team Members</option>' + 
+                responsible.map(r => `<option value="${r}">${r}</option>`).join('');
+
+            // const revisedByFilter = document.getElementById('revisedByFilter');
+            // revisedByFilter.innerHTML = '<option value="">All Reviewers</option>' + 
+            //     revisedBy.map(r => `<option value="${r}">${r}</option>`).join('');
+
+            // const statusFilter = document.getElementById('statusFilter');
+            // statusFilter.innerHTML = '<option value="">All Status</option>' + 
+            //     statuses.map(s => `<option value="${s}">${s}</option>`).join('');
+
+            // const priorityFilter = document.getElementById('priorityFilter');
+            // priorityFilter.innerHTML = '<option value="">All Priorities</option>' + 
+            //     priorities.map(p => `<option value="${p}">${p}</option>`).join('');
+        }
+        function openAddModalP(){
+            currentEditingRow = null;
+            document.getElementById('modalTitlep').textContent = 'Add New Task';
+            document.getElementById('taskFormp').reset();
+            document.getElementById('saveBtnp').innerHTML = '💾 Save Task';
+            const tasks = getFilteredTasks();
+            
+            // Populate form
+            const projectNameSelect = document.getElementById('projectName');
+            const responsibleSelect = document.getElementById('responsible');
+            const revisedBySelect = document.getElementById('revisedBy');
+
+            // Clear existing options
+            projectNameSelect.innerHTML = '';
+            responsibleSelect.innerHTML = '';
+            revisedBySelect.innerHTML = '';
+
+            // Add new options
+            // const uniqueProjects = [...new Set(tasks.map(t => t['Project Name']).filter(Boolean))];
+            // uniqueProjects.forEach(name => {
+            //     const option = new Option(name, name);
+            //     projectNameSelect.add(option);
+            // });
+
+            const uniqueResponsibles = [...new Set(tasks.map(t => t['Responsible']).filter(Boolean))];
+            uniqueResponsibles.forEach(name => {
+                const option = new Option(name, name);
+                responsibleSelect.add(option);
+            });
+
+            const uniqueRevisedBys = [...new Set(tasks.map(t => t['Revised by']).filter(Boolean))];
+            uniqueRevisedBys.forEach(name => {
+                const option = new Option(name, name);
+                revisedBySelect.add(option);
+            });
+
+            // Extract unique project names
+            const uniqueProjects = [...new Set(tasks.map(t => t['Project Name']).filter(Boolean))];
+
+            // Add unique options
+            uniqueProjects.forEach(name => {
+            const option = new Option(name, name);
+            projectNameSelect.add(option);
+            });
+
+            document.getElementById('taskModalp').classList.add('active');
+        }
+
+        function getFilteredTasks() {
+            const projectFilter = document.getElementById('projectFilter').value;
+            const responsibleFilter = document.getElementById('responsibleFilter').value;
+            // const revisedByFilter = document.getElementById('revisedByFilter').value;
+            // const statusFilter = document.getElementById('statusFilter').value;
+            // const priorityFilter = document.getElementById('priorityFilter').value;
+            // const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            
+            // const startDateFrom = document.getElementById('startDateFrom').value;
+            // const startDateTo = document.getElementById('startDateTo').value;
+            // const endDateFrom = document.getElementById('endDateFrom').value;
+            // const endDateTo = document.getElementById('endDateTo').value;
+            // const deadlineFrom = document.getElementById('deadlineFrom').value;
+            // const deadlineTo = document.getElementById('deadlineTo').value;
+            // console.log(allTasks);
+            return allTasks.filter(task => {
+                const matchProject = !projectFilter || task['Project Name'] === projectFilter;
+                const matchResponsible = !responsibleFilter || task['Responsible'] === responsibleFilter;
+                // const matchRevisedBy = !revisedByFilter || task['Revised by'] === revisedByFilter;
+                // const matchStatus = !statusFilter || task['Status'] === statusFilter;
+                // const matchPriority = !priorityFilter || task['Priority'] === priorityFilter;
+                // const matchSearch = !searchQuery || 
+                //     (task['Task Name'] || '').toLowerCase().includes(searchQuery) ||
+                //     (task['Project Name'] || '').toLowerCase().includes(searchQuery);
+
+                // Date filters
+                // const taskStartDate = parseDate(task['Start Date']);
+                // const taskEndDate = parseDate(task['End Date']);
+                // const taskDeadline = parseDate(task['Deadline']);
+
+                // const matchStartDateFrom = !startDateFrom || !taskStartDate || taskStartDate >= new Date(startDateFrom);
+                // const matchStartDateTo = !startDateTo || !taskStartDate || taskStartDate <= new Date(startDateTo);
+                // const matchEndDateFrom = !endDateFrom || !taskEndDate || taskEndDate >= new Date(endDateFrom);
+                // const matchEndDateTo = !endDateTo || !taskEndDate || taskEndDate <= new Date(endDateTo);
+                // const matchDeadlineFrom = !deadlineFrom || !taskDeadline || taskDeadline >= new Date(deadlineFrom);
+                // const matchDeadlineTo = !deadlineTo || !taskDeadline || taskDeadline <= new Date(deadlineTo);
+
+                return matchProject && matchResponsible           });
+        }
+
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(event) {
+            // ESC to close modals
+            if (event.key === 'Escape') {
+                closeModal();
+                closeDeleteModal();
+            }
+            
+            // Ctrl/Cmd + N to add new task
+            if ((event.ctrlKey || event.metaKey) && event.key === 'n') {
+                event.preventDefault();
+                openAddModal();
+            }
+            
+            // Ctrl/Cmd + R to refresh
+            if ((event.ctrlKey || event.metaKey) && event.key === 'r') {
+                event.preventDefault();
+                loadTasks();
+            }
+            if (event.key === 'F12') {
+                event.preventDefault();
+            }
+
+            // Ctrl + Shift + I
+            if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === 'i') {
+                event.preventDefault();
+            }
+
+            // Ctrl + Shift + J (console)
+            if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === 'j') {
+                event.preventDefault();
+            }
+
+            // Ctrl + U (view source)
+            if (event.ctrlKey && event.key.toLowerCase() === 'u') {
+                event.preventDefault();
+            }
+
+            // Ctrl + S (save page)
+            if (event.ctrlKey && event.key.toLowerCase() === 's') {
+                event.preventDefault();
+            }
+
+            // Ctrl + C (copy)
+            if (event.ctrlKey && event.key.toLowerCase() === 'c') {
+                event.preventDefault();
+            }
+            
+            if (event.ctrlKey && event.key.toLowerCase() === 'p') {
+                event.preventDefault();
+            }
+        });
+
+        document.getElementById('projectFilter').addEventListener('change', () => {
+            renderTasksTable();
+        });
+        document.getElementById('responsibleFilter').addEventListener('change', () => {
+            // console.log('Responsible filter changed');
+            renderTasksTable();
+        });
+        // Set today's date as default for start date
+        window.onload = function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('startDate').value = today;
+        }
+        loadTasks();
+     document.addEventListener('contextmenu', event => event.preventDefault());
+
+    </script>
+</body>
+</html>

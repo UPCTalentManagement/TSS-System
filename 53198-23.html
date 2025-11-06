@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #66ea9d 0%, #4b9ea2 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: #333;
+        }
+
+        h1 {
+            margin-bottom: 40px;
+            color: white;
+            text-shadow: 0 3px 8px rgba(0,0,0,0.2);
+        }
+
+        .card-container {
+            display: flex;
+            gap: 30px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px 60px;
+            border-radius: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+            font-size: 18px;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to Your Dashboard</h1>
+
+    <div class="card-container">
+        <div class="card" onclick="openPage('task')">🗂️ Task Management</div>
+        <div class="card" onclick="openPage('dashboard')">📊 Dashboard</div>
+        <div class="card" onclick="openPage('holiday')">🏖️ Holidays</div>
+    </div>
+
+    <script>
+        function openPage(type) {
+            if (type === 'task') {
+                window.location.href = '53198-27.html';
+                // Replace with actual page: window.location.href = 'tasks.html';
+            } 
+            else if (type === 'holiday') {
+                window.location.href = '53198-25.html';
+                // Replace with actual page: window.location.href = 'holidays.html';
+            }
+        }
+        document.addEventListener('keydown', function(e) {
+                if (
+                    e.key === 'F12' ||
+                    (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'C' || e.key === 'J' || e.key === 'K')) ||
+                    (e.ctrlKey && e.key.toLowerCase() === 'u') || (e.ctrlKey && e.key.toLowerCase() === 's' || (e.ctrlKey && e.key.toLowerCase() === 'p' ))
+                ) {
+                    e.preventDefault();
+                    return false;
+                }
+                });
+                document.addEventListener('contextmenu', e => e.preventDefault());
+    </script>
+</body>
+</html>
