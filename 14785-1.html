@@ -752,6 +752,9 @@
     </footer>
 
     <script>
+        if (sessionStorage.getItem("authenticated") !== "true") {
+            window.location.href = "loginPageFin.html";
+        }
         let allTasks = [];
         let filteredTasks = [];
         let currentEditingRow = null;

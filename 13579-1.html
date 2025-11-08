@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr Mahmoud - Holiday Balance Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #66ea9d 0%, #4b9ea2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1500px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4eb277 0%, #3f8589 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .controls {
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 8px;
+            padding: 10px 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            font-size: 1em;
+            width: 100%;
+            margin-left: 10px;
+        }
+
+        .refresh-btn {
+            background: #51bc9c;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .refresh-btn:hover {
+            background: #55d1d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 234, 194, 0.4);
+        }
+
+        .refresh-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #66d0ea;
+            font-size: 1.2em;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #66b7ea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .table-container {
+            padding: 30px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #48a870 0%, #4b9ea2 100%);
+            color: white;
+        }
+
+        th {
+            padding: 18px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        tbody tr:hover {
+            background: #f8f9fa;
+            transform: scale(1.01);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        td {
+            padding: 20px 18px;
+            font-size: 1em;
+        }
+
+        .id-col {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .name-col {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .stat-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .total-badge {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .available-badge {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .used-badge {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ddeb5a 0%, #4ba255 100%);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .error {
+            text-align: center;
+            padding: 40px;
+            color: #dc3545;
+        }
+
+        .error-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 60px;
+            color: #6c757d;
+        }
+
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px 30px;
+            background: #f8f9fa;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover {
+            background: #f8f9fa;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            /* transform: translateY(-2px); */
+            transform: scale(1.01);
+        }
+
+       
+
+        .stat-card h3 {
+            color: #6c757d;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .stat-card .value {
+            font-size: 2em;
+            font-weight: 700;
+            color: #4baba3;
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .search-box {
+                max-width: 100%;
+            }
+
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            th, td {
+                padding: 12px 10px;
+                font-size: 0.9em;
+            }
+
+            .table-container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏖️ Welcome Dr Mahmoud to your Holiday Balance Tracker</h1>
+            <p>Monitor your holiday availability in real-time</p>
+        </div>
+
+        <div class="stats-summary" id="statsSummary" style="display: none;">
+            <!-- <div class="stat-card">
+                <h3>Team Members</h3>
+                <div class="value" id="totalMembers">0</div>
+            </div> -->
+            <div class="stat-card">
+                <h3>Total Days</h3>
+                <div class="value" id="totalDays">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Available Days</h3>
+                <div class="value" id="availableDays">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Used Days</h3>
+                <div class="value" id="usedDays">0</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <!-- <div class="search-box">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                <input type="text" id="searchInput" placeholder="Search by name...">
+            </div> -->
+            <button class="refresh-btn" id="refreshBtn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+                </svg>
+                Refresh Data
+            </button>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Loading holiday data...</p>
+        </div>
+
+        <div class="table-container" id="tableContainer" style="display: none;">
+            <table>
+                <thead>
+                    <tr>
+                        <!-- <th>ID</th> -->
+                        <th>Name</th>
+                        <th>Total Days</th>
+                        <th>Available Days</th>
+                        <th>Used Days</th>
+                        <th>Usage</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="error" id="error" style="display: none;">
+            <div class="error-icon">⚠️</div>
+            <h3>Failed to Load Data</h3>
+            <p id="errorMessage"></p>
+        </div>
+    </div>
+
+    <script>
+        if (sessionStorage.getItem("authenticated") !== "true") {
+            window.location.href = "loginPageFin.html";
+        }
+        // REPLACE THIS WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxKXybP7bnbYzQodm_g0BPtkCcOYyTcpqc0nTOuP1vL8o1DEoxpRkVT091QBuGZJb6DAg/exec';
+        
+        let allData = [];
+        // global
+        let i = 2;
+        let j = 1;
+        async function fetchHolidayData() {
+            const loading = document.getElementById('loading');
+            const tableContainer = document.getElementById('tableContainer');
+            const error = document.getElementById('error');
+            const refreshBtn = document.getElementById('refreshBtn');
+
+            loading.style.display = 'block';
+            tableContainer.style.display = 'none';
+            error.style.display = 'none';
+            refreshBtn.disabled = true;
+
+            try {
+                const response = await fetch(SCRIPT_URL);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    allData = data.data;
+                    displayData(allData);
+                    updateStatistics(allData);
+                } else {
+                    throw new Error(data.message || 'Failed to fetch data');
+                }
+            } catch (err) {
+                console.error('Error:', err);
+                error.style.display = 'block';
+                document.getElementById('errorMessage').textContent = err.message;
+            } finally {
+                loading.style.display = 'none';
+                refreshBtn.disabled = false;
+            }
+        }
+
+        function displayData(data) {
+            const tableBody = document.getElementById('tableBody');
+            const tableContainer = document.getElementById('tableContainer');
+            const statsSummary = document.getElementById('statsSummary');
+
+            tableBody.innerHTML = '';
+
+            if (data.length === 0) {
+                tableContainer.style.display = 'none';
+                statsSummary.style.display = 'none';
+                document.getElementById('error').style.display = 'block';
+                document.getElementById('errorMessage').textContent = 'No holiday data available';
+                return;
+            }
+
+            data.forEach(row => {
+                if (row.id == i) {
+                    const tr = document.createElement('tr');
+                    const usagePercent = (row.used / row.total * 100).toFixed(1);
+                    
+                    tr.innerHTML = `
+                        
+                        <td class="name-col">${row.name}</td>
+                        <td><span class="stat-badge total-badge">${row.total}</span></td>
+                        <td><span class="stat-badge available-badge">${row.available}</span></td>
+                        <td><span class="stat-badge used-badge">${row.used}</span></td>
+                        <td>
+                            <div>${usagePercent}% used</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${usagePercent}%"></div>
+                            </div>
+                        </td>
+                    `;
+                    tableBody.appendChild(tr);}
+            });
+
+            tableContainer.style.display = 'block';
+            statsSummary.style.display = 'grid';
+        }
+
+        function updateStatistics(data) {
+            // const totalMembers = data.length;
+            
+            const totalDays = data[j]['total'];
+            const availableDays = data[j]['available'];
+            const usedDays = data[j]['used'];
+
+            // document.getElementById('totalMembers').textContent = totalMembers;
+            document.getElementById('totalDays').textContent = totalDays.toFixed(2);
+            document.getElementById('availableDays').textContent = availableDays.toFixed(2);
+            document.getElementById('usedDays').textContent = usedDays.toFixed(2);
+        }
+
+        // function filterData() {
+        //     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        //     const filteredData = allData.filter(row => 
+        //         row.name.toLowerCase().includes(searchTerm)
+        //     );
+        //     displayData(filteredData);
+        // }
+
+        // document.getElementById('searchInput').addEventListener('input', filterData);
+        document.getElementById('refreshBtn').addEventListener('click', fetchHolidayData);
+
+        // Load data on page load
+        fetchHolidayData();
+        document.addEventListener('keydown', function(e) {
+                if (
+                    e.key === 'F12' ||
+                    (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'C' || e.key === 'J' || e.key === 'K')) ||
+                    (e.ctrlKey && e.key.toLowerCase() === 'u') || (e.ctrlKey && e.key.toLowerCase() === 's' || (e.ctrlKey && e.key.toLowerCase() === 'p' ))
+                ) {
+                    e.preventDefault();
+                    return false;
+                }
+                });
+                document.addEventListener('contextmenu', e => e.preventDefault());
+    </script>
+</body>
+</html>

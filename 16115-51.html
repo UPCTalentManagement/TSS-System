@@ -51,7 +51,7 @@
     </style>
 </head>
 <body>
-    <h1>Welcome to Your Dashboard</h1>
+    <h1>Welcome Dr Arafat to Your Dashboard</h1>
 
     <div class="card-container">
         <div class="card" onclick="openPage('task')">🗂️ Task Management</div>
@@ -60,6 +60,9 @@
     </div>
 
     <script>
+        if (sessionStorage.getItem("authenticated") !== "true") {
+            window.location.href = "loginPageFin.html";
+        }
         function openPage(type) {
             if (type === 'task') {
                 window.location.href = '16115-35.html';
